@@ -1,0 +1,21 @@
+{
+  "name": "docker-slides",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Markdown-based course slides (Slidev), editable by LLM assistants",
+  "type": "module",
+  "scripts": {
+    "docker:s1": "slidev decks/docker/session-1.md --open",
+    "docker:s2": "slidev decks/docker/session-2.md --open",
+    "docker:s1:pdf": "slidev export decks/docker/session-1.md --output decks/docker/session-1.pdf",
+    "docker:s2:pdf": "slidev export decks/docker/session-2.md --output decks/docker/session-2.pdf",
+    "docker:s1:build": "slidev build decks/docker/session-1.md --out ../../dist/docker-s1 --base /dockerSlides/docker-s1/",
+    "docker:s2:build": "slidev build decks/docker/session-2.md --out ../../dist/docker-s2 --base /dockerSlides/docker-s2/"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^52.0.0",
+    "@slidev/theme-default": "^0.25.0",
+    "@slidev/theme-seriph": "^0.25.0",
+    "playwright-chromium": "^1.61.1"
+  }
+}

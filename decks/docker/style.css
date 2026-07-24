@@ -1,0 +1,166 @@
+/* Shared styling for the Docker course decks (auto-loaded by Slidev). */
+
+:root {
+  --docker-blue:  #2496ED;
+  --docker-blueD: #1D63A6;
+  --docker-navy:  #0B214A;
+  --slidev-theme-primary: #2496ED;
+}
+
+/* --- Headings: accent bar under every title --- */
+.slidev-layout h1 {
+  color: var(--docker-navy);
+  font-weight: 700;
+}
+/* Default theme dims the first paragraph after a title; restore full weight. */
+.slidev-layout h1 + p { color: inherit; opacity: 1; }
+
+/* Center content vertically so sparse slides don't cluster at the top.
+   `safe center` falls back to top-alignment when content is too tall to fit. */
+.slidev-layout.default {
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+}
+.slidev-layout:not(.cover-slide):not(.section-slide) h1::after {
+  content: '';
+  display: block;
+  width: 3rem; height: 4px;
+  margin-top: .45rem;
+  border-radius: 2px;
+  background: var(--docker-blue);
+}
+
+/* --- Tables: colored header row --- */
+.slidev-layout th {
+  background: var(--docker-blue);
+  color: #fff;
+  font-weight: 600;
+}
+.slidev-layout td, .slidev-layout th { padding: .4rem .7rem; }
+.slidev-layout tbody tr:nth-child(even) td { background: rgba(36,150,237,.06); }
+
+/* --- Blockquote "idea clave" --- */
+.slidev-layout blockquote {
+  border-left: 4px solid var(--docker-blue);
+  background: rgba(36,150,237,.08);
+  border-radius: 6px;
+  padding: .6rem 1rem;
+}
+
+/* --- Cover slide --- */
+.cover-slide {
+  background: linear-gradient(135deg, #0B214A 0%, #1D63A6 55%, #2496ED 100%);
+  color: #fff;
+}
+.cover-slide h1 { color: #fff; font-size: 3.4rem; }
+.cover-slide h1 + p, .cover-slide p { color: #dbeafe; }
+.cover-slide .subtitle {
+  margin-top: 1rem; font-size: 1.15rem;
+  color: #cfe3f7; letter-spacing: .08em;
+}
+.cover-kicker {
+  font-size: .95rem; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: #9ec6ef; margin-bottom: 1rem;
+}
+.cover-meta { margin-top: 2.4rem; line-height: 1.45; }
+.cover-meta .cover-prof { font-size: 1.05rem; font-weight: 600; color: #fff; }
+.cover-meta .cover-mail { font-size: .9rem; color: #bcd6f2; }
+
+/* --- Section divider / activity slides --- */
+.section-slide {
+  background: linear-gradient(135deg, #123a63 0%, #1D63A6 100%);
+  color: #fff;
+}
+.section-slide h1 { color: #fff; }
+.section-slide p, .section-slide li, .section-slide em, .section-slide code {
+  color: #eaf3fc;
+}
+
+/* Command code blocks: share the dark terminal look of .term (below), but keep
+   Shiki's colored syntax and the copy button. A near-black background (the tone
+   github-dark is tuned for) keeps the colored tokens high-contrast. */
+.slidev-layout .slidev-code {
+  background: #0d1117 !important;
+  border-radius: 8px;
+  padding: .85rem 1rem;
+}
+/* Flatten Shiki's per-token colors to a single light tone, matching the .term
+   output blocks (uniform, high-contrast). Copy button and dark bg stay. */
+.slidev-layout .slidev-code,
+.slidev-layout .slidev-code span {
+  color: #c9d1d9 !important;
+}
+
+/* Console output / transcript — NOT a code fence, so it has no copy button.
+   Use for command output, shell prompts and annotations that must never be
+   copied. Copyable commands go in ```bash fences (only runnable commands). */
+.term {
+  position: relative;
+  background: #0d1117;
+  border-radius: 8px;
+  padding: 1.25rem 1rem .75rem;
+  margin: .6rem 0;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: .78rem;
+  line-height: 1.6;
+  color: #c9d1d9;
+  white-space: pre;
+  overflow-x: auto;
+}
+.term::before {
+  content: "salida";
+  position: absolute; top: .4rem; left: 1rem;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: .6rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: #6e7681;
+}
+
+/* ============ DIAGRAMS ============ */
+
+/* Layered stacks (VM vs container) */
+.cmp { display: flex; gap: 2.5rem; justify-content: center; margin-top: 1rem; }
+.stack { display: flex; flex-direction: column; gap: .45rem; width: 210px; }
+.stack-title { text-align: center; font-weight: 700; color: var(--docker-blueD); }
+.layer {
+  padding: .5rem .7rem; border-radius: 8px; text-align: center;
+  font-size: .82rem; background: #eef3f8; border: 1px solid #d5e2ee; color: #25323b;
+}
+.layer.app  { background: var(--docker-blue); color: #fff; border-color: var(--docker-blueD); font-weight: 600; }
+.layer.host { background: var(--docker-navy); color: #fff; border-color: var(--docker-navy); }
+.layer.hw   { background: #33475b; color: #fff; }
+.layer.hyp  { background: #ead9f6; }
+.layer.os   { background: #f6e2cf; }
+.layer.proc { background: #d9efe3; }
+.layer.shared { box-shadow: 0 0 0 2px var(--docker-blue); }
+
+/* Horizontal pipeline (architecture / lifecycle) */
+.flow {
+  display: flex; align-items: center; justify-content: center;
+  gap: .55rem; flex-wrap: wrap; margin: 1.4rem 0;
+}
+.node {
+  padding: .65rem 1.05rem; border-radius: 10px; background: #fff;
+  border: 2px solid var(--docker-blue); color: var(--docker-blueD);
+  font-weight: 600; box-shadow: 0 2px 10px rgba(36,150,237,.18);
+}
+.node.solid  { background: var(--docker-blue); color: #fff; }
+.node.navy   { background: var(--docker-navy); color: #fff; border-color: var(--docker-navy); }
+.node.ghost  { background: #eef3f8; box-shadow: none; }
+.node.danger { border-color: #e5533c; color: #c23b26; }
+.node-col { display: flex; flex-direction: column; gap: .5rem; }
+.arr { color: var(--docker-blue); font-size: 1.5rem; line-height: 1; }
+.flow-note { color: #5b6b76; }
+
+/* Activity call-to-action */
+.repo-cta { margin-top: 2rem; }
+.repo-btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .8rem 1.6rem; border-radius: 12px;
+  background: #fff; color: var(--docker-blueD) !important;
+  font-weight: 600; font-size: 1.05rem; text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  transition: transform .12s ease;
+}
+.repo-btn:hover { transform: translateY(-2px); }
+.repo-hint { margin-top: .9rem; font-size: .8rem; color: #cfe0f2; }

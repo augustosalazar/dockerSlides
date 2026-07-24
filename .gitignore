@@ -1,0 +1,16 @@
+node_modules/
+
+# Slidev build output
+dist/
+.slidev/
+
+# Exported decks
+*.pdf
+decks/**/*.png
+
+# Machine-local Claude Code settings
+.claude/settings.local.json
+
+# OS / editor
+Thumbs.db
+.DS_Store
