@@ -76,6 +76,15 @@
 .section-slide p, .section-slide li, .section-slide em, .section-slide code {
   color: #eaf3fc;
 }
+/* Inline code on a dark divider needs a dark chip; the theme's default light
+   background would leave light text on light. !important beats the theme's own
+   inline-code background rule. */
+.slidev-layout.section-slide code {
+  background: rgba(255, 255, 255, .16) !important;
+  color: #eaf3fc !important;
+  padding: .1em .4em;
+  border-radius: 4px;
+}
 
 /* Command code blocks: share the dark terminal look of .term (below), but keep
    Shiki's colored syntax and the copy button. A near-black background (the tone

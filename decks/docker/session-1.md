@@ -623,6 +623,28 @@ proceso principal termina y el contenedor se detiene.
 
 ---
 
+# Copiar archivos: `docker cp`
+
+A veces no necesitas nada elaborado, solo **mover un archivo puntual** entre el
+host y un contenedor: meter un archivo de configuración, o sacar un log para
+revisarlo fuera. Para eso está `docker cp`, que funciona en ambas direcciones.
+
+```bash
+docker cp notas.txt mydebian:/tmp/notas.txt
+docker cp mydebian:/etc/os-release ./os-release
+```
+
+<pre class="term">Successfully copied 2.048kB to mydebian:/tmp/notas.txt
+Successfully copied 3.584kB to ./os-release</pre>
+
+- El orden es siempre **origen destino**; el lado que lleva `contenedor:ruta`
+  decide la dirección de la copia.
+- Funciona aunque el contenedor esté **detenido**.
+- Lo que copias hacia dentro cae en la **capa escribible**: si haces `rm` del
+  contenedor, desaparece. Es una copia puntual, no una sincronización.
+
+---
+
 # `docker exec` · ejecutar en un contenedor en marcha
 
 Ejecuta un comando **dentro de un contenedor que ya está corriendo**; no crea uno

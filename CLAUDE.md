@@ -83,6 +83,11 @@ Note: Node 22.16 triggers a Slidev engine warning but works fine.
 
 ## Status
 
-- Session 1: fully authored (35 slides), themed, verified via PNG export.
-- Session 2: not yet converted from `containers/docker_deck_table.md`
-  (31 slides — bind mounts, Dockerfile, Docker Compose).
+- Session 1: fully authored (50 slides), themed, verified via PNG export.
+  Includes bind mounts (moved here from the Session 2 plan) and `docker cp`.
+- Session 2: fully authored (26 slides), themed, verified via PNG export —
+  Dockerfile, `docker build`, running a custom image, and Docker Compose.
+  Bind mounts are intentionally NOT here (they live in Session 1), so the deck
+  diverges from `containers/docker_deck_table.md` on that point.
+- Both decks publish to GitHub Pages via `.github/workflows/pages.yml`; the
+  landing page (`site/index.html`) links each session.
