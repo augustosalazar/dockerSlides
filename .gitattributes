@@ -1,0 +1,14 @@
+# Normalize text files to LF in the repository and on checkout, so decks
+# edited from Windows and macOS/Linux don't produce whole-file phantom diffs.
+* text=auto eol=lf
+
+# Binary source material and assets — never touch these.
+*.pptx binary
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.woff  binary
+*.woff2 binary

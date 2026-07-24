@@ -1,0 +1,60 @@
+name: Deploy slides to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a newer push supersede an in-flight deploy, but never cancel a
+# deploy that is already publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Each deck builds into its own subdirectory. The --base in the
+      # package.json script must match the Pages URL path, i.e.
+      # /dockerSlides/docker-s1/ — update it if the repo is renamed.
+      - name: Build Session 1
+        run: npm run docker:s1:build
+
+      # Session 2 is not authored yet. Uncomment once decks/docker/session-2.md
+      # exists, and drop the "pending" list item from site/index.html.
+      # - name: Build Session 2
+      #   run: npm run docker:s2:build
+
+      - name: Add landing page
+        run: cp site/index.html dist/index.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
