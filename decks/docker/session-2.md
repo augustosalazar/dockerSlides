@@ -121,7 +121,7 @@ produce una imagen reproducible.
 
 Un Dockerfile típico para una aplicación Node:
 
-```dockerfile
+```dockerfile {3-4}
 FROM node:18
 WORKDIR /app
 COPY package*.json ./
