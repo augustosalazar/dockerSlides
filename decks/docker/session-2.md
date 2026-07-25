@@ -7,6 +7,8 @@ info: |
 class: cover-slide text-center
 transition: slide-left
 mdc: true
+# Hash routing so deep links / refresh work on GitHub Pages (no URL rewrites).
+routerMode: hash
 ---
 
 <div class="cover-kicker">Universidad del Norte · Estructura del Computador II</div>
