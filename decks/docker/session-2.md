@@ -245,6 +245,26 @@ invalida la costosa capa de `npm install`.
 
 ---
 
+# `docker build` · opciones frecuentes
+
+| Opción | Qué hace |
+|--------|----------|
+| `-t <nombre>:<tag>` | **nombra** (tag) la imagen; se puede repetir para varios tags |
+| `-f <ruta>` | usa un Dockerfile con **otro nombre o ubicación** (por defecto `./Dockerfile`) |
+| `--build-arg <clave>=<valor>` | pasa un valor a un `ARG` declarado en el Dockerfile |
+| `--no-cache` | **ignora la caché** y reconstruye todas las capas desde cero |
+| `--platform <os/arch>` | construye para otra arquitectura (p. ej. `linux/arm64`) |
+
+**Ejemplos** — un Dockerfile alterno, un argumento de build y un build limpio:
+
+```bash
+docker build -f docker/Dockerfile.prod -t miapp-node:prod .
+docker build --build-arg NODE_ENV=production -t miapp-node .
+docker build --no-cache -t miapp-node .
+```
+
+---
+
 # `docker image ls` · verificar la imagen
 
 Tras construir, confirma que la imagen existe localmente (equivale a
