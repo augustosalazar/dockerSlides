@@ -504,6 +504,90 @@ class: section-slide
 
 ---
 
+# Verificación de salud entre contenedores
+
+Que un contenedor **arranque** no significa que su servicio esté **listo**: la
+base de datos puede tardar unos segundos en aceptar conexiones. Con un
+`healthcheck` Docker comprueba si el servicio responde, y otro servicio puede
+**esperar** a que esté sano antes de arrancar.
+
+```yaml {4-6,12}
+services:
+  db:
+    image: postgres:16
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+  web:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+```
+
+- `healthcheck.test` → comando que decide si está sano (código de salida 0 = sano).
+- `depends_on … condition: service_healthy` → `web` no arranca hasta que `db`
+  reporte *healthy*. Sin el healthcheck, `depends_on` solo espera a que el
+  contenedor **arranque**, no a que esté **listo**.
+
+---
+
+# Variables de entorno en Compose
+
+La configuración (contraseñas, modo, hosts) no debería estar incrustada en el
+código. Compose ofrece varias formas de inyectarla como **variables de entorno**.
+
+```yaml {7-8,12}
+services:
+  web:
+    build: .
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+    env_file:
+      - .env
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+```
+
+- `environment:` → define variables directamente (`clave: valor`).
+- `env_file:` → cárgalas desde un archivo (`CLAVE=valor` por línea) para no repetirlas.
+- `${DB_PASSWORD}` → **sustitución**: Compose lo toma de un `.env` del proyecto o
+  del shell. Ideal para secretos, que así quedan **fuera** del YAML versionado.
+
+---
+
+# Multi-stage builds
+
+Compilar necesita herramientas (compiladores, dev-dependencies) que la imagen
+final **no** debería cargar. Un build **multi-etapa** compila en una etapa y
+copia a la imagen final **solo el resultado**: más liviana y más segura.
+
+```dockerfile {8,12}
+FROM node:18 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+FROM node:18-slim
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --omit=dev
+COPY --from=build /app/dist ./dist
+CMD ["node", "dist/server.js"]
+```
+
+- Dos etapas con `FROM … AS <nombre>`: `build` compila; la segunda es la final.
+- `COPY --from=build` trae solo los artefactos (`dist`), sin el código fuente ni
+  el instrumental de compilación. La imagen final parte de `node:18-slim` → pasa
+  de ~1 GB a un par de cientos de MB.
+
+---
+
 # Errores comunes de toda la unidad
 
 Un repaso de las trampas frecuentes, de la Sesión 1 a hoy:
