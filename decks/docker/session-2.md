@@ -340,8 +340,7 @@ class: section-slide
 # Actividad 4 — Construir tu propia imagen
 
 <div class="repo-cta">
-  <!-- TODO: apuntar href al repositorio de la actividad -->
-  <a class="repo-btn" href="#" target="_blank" rel="noopener">📦 Abrir repositorio de la actividad →</a>
+  <a class="repo-btn" href="https://github.com/augustosalazar/nodejsBaseApp" target="_blank" rel="noopener">📦 Abrir repositorio de la actividad →</a>
   <div class="repo-hint">El repositorio incluye las instrucciones y el código de la práctica.</div>
 </div>
 
