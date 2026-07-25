@@ -37,6 +37,12 @@
   color: #fff;
   font-weight: 600;
 }
+/* Inline code in a header cell: the theme's light code background over the blue
+   header leaves the text unreadable. Give it a translucent dark chip + white. */
+.slidev-layout th code {
+  background: rgba(255, 255, 255, .18) !important;
+  color: #fff !important;
+}
 .slidev-layout td, .slidev-layout th { padding: .4rem .7rem; }
 .slidev-layout tbody tr:nth-child(even) td { background: rgba(36,150,237,.06); }
 
