@@ -496,8 +496,7 @@ class: section-slide
 # Actividad 5 — De comando manual a servicio
 
 <div class="repo-cta">
-  <!-- TODO: apuntar href al repositorio de la actividad -->
-  <a class="repo-btn" href="#" target="_blank" rel="noopener">📦 Abrir repositorio de la actividad →</a>
+  <a class="repo-btn" href="https://github.com/augustosalazar/webDBBaseApp" target="_blank" rel="noopener">📦 Abrir repositorio de la actividad →</a>
   <div class="repo-hint">El repositorio incluye las instrucciones y el código de la práctica.</div>
 </div>
 
