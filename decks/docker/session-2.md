@@ -125,7 +125,7 @@ Un Dockerfile típico para una aplicación Node:
 
 ```dockerfile {3-4}
 FROM node:18
-WORKDIR /app
+WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 COPY . .
@@ -133,7 +133,7 @@ EXPOSE 3000
 CMD ["npm", "start"]
 ```
 
-Leído como receta: *parte de `node:18`, sitúate en `/app`, copia primero las
+Leído como receta: *parte de `node:18`, sitúate en `/usr/src/app`, copia primero las
 dependencias e instálalas, luego copia el resto del código, documenta el puerto
 3000 y, al arrancar, ejecuta `npm start`.*
 
@@ -212,7 +212,7 @@ docker build -t miapp-node .
 ```
 
 <pre class="term">[+] Building 12.3s (10/10) FINISHED
- => [2/5] WORKDIR /app
+ => [2/5] WORKDIR /usr/src/app
  => [4/5] RUN npm install
  => [5/5] COPY . .
  => => naming to docker.io/library/miapp-node:latest</pre>
@@ -322,11 +322,11 @@ comparte tu **código en vivo**. Combinados, obtienes el mejor flujo de
 desarrollo: entorno reproducible + cambios inmediatos.
 
 ```bash
-docker run -d --name miapp-dev -p 3000:3000 -v $(pwd):/app miapp-node
+docker run -d --name miapp-dev -p 3000:3000 -v $(pwd):/usr/src/app miapp-node
 ```
 
 - La **imagen** aporta el entorno ya construido (no reinstalas nada).
-- El **bind mount** monta tu carpeta sobre `/app`: editas en el host y el
+- El **bind mount** monta tu carpeta sobre `/usr/src/app`: editas en el host y el
   contenedor ve el cambio al instante.
 
 > Regla práctica: **construyes la imagen una vez** para fijar el entorno, y
@@ -355,13 +355,14 @@ volúmenes, variables, nombre… y encima cada servicio (app, base de datos) es 
 propio `run`.
 
 ```bash
-docker run -d --name web -p 3000:3000 -v $(pwd):/app -e NODE_ENV=dev miapp-node
-docker run -d --name db -e POSTGRES_PASSWORD=secret postgres:16
+docker run -d --name web -p 3000:3000 -v $(pwd):/usr/src/app -e NODE_ENV=dev miapp-node
+docker run -d --name db -p 5432:5432 -e POSTGRES_PASSWORD=secret postgres:16
 ```
 
-Repetir y recordar esos comandos es frágil y difícil de compartir. Queremos la
-configuración **escrita, versionada y reproducible** en un archivo, no en el
-historial de la terminal.
+`db` también necesita su `-p`: sin publicar el puerto, `web` no tendría cómo
+alcanzar la base de datos. Repetir y recordar esos comandos es frágil y difícil
+de compartir. Queremos la configuración **escrita, versionada y reproducible**
+en un archivo, no en el historial de la terminal.
 
 Esa es la motivación de **Docker Compose**: describir la aplicación completa en
 un archivo y levantarla con un solo comando.
@@ -396,7 +397,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - .:/usr/src/app
     command: npm start
 ```
 
@@ -458,8 +459,6 @@ services:
       - "3000:3000"
   db:
     image: postgres:16
-    environment:
-      POSTGRES_PASSWORD: secret
 ```
 
 <div class="flow">
@@ -470,9 +469,8 @@ services:
   <div class="node">db</div>
 </div>
 
-`web` se conecta a la base de datos usando el **hostname `db`** —el nombre del
-servicio—, sin necesidad de IPs. Esto es lo que hace a Compose tan cómodo para
-aplicaciones con más de un contenedor.
+`web` alcanza a `db` por su **hostname**, sin IPs y sin que `db` publique su
+puerto — a diferencia de `docker run`, donde tocaba hacerlo a mano.
 
 ---
 
