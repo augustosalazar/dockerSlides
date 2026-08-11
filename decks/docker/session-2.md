@@ -473,6 +473,81 @@ services:
 puerto — a diferencia de `docker run`, donde tocaba hacerlo a mano.
 
 ---
+layout: two-cols
+layoutClass: gap-8
+---
+
+# Varias redes · aislar el front del back
+
+La red por defecto conecta **todo con todo**. Declarando **varias redes** en
+`networks:` decides a cuáles se conecta cada servicio.
+
+```yaml
+services:
+  frontend:
+    networks: [front-net]
+  backend:
+    networks: [front-net, back-net]
+  db:
+    image: postgres:16
+    networks: [back-net]
+
+networks:
+  front-net:
+  back-net:
+```
+
+::right::
+
+<div class="node-col" style="align-items: stretch; margin-top: 2.5rem;">
+  <div class="netgrp">
+    <div class="netgrp-title">front-net</div>
+    <div class="flow" style="margin: 0;">
+      <div class="node solid">frontend</div>
+      <div class="arr">↔</div>
+      <div class="node navy">backend</div>
+    </div>
+  </div>
+  <div class="netgrp">
+    <div class="netgrp-title">back-net</div>
+    <div class="flow" style="margin: 0;">
+      <div class="node navy">backend</div>
+      <div class="arr">↔</div>
+      <div class="node">db</div>
+    </div>
+  </div>
+</div>
+
+`backend` es el único servicio en **ambas** redes: hace de puente. `frontend`
+nunca toca `back-net`, así que **no** puede resolver ni alcanzar a `db`.
+
+---
+
+# `depends_on` · orden de arranque entre servicios
+
+Compose no adivina el orden de arranque: si `backend` necesita que `db` exista
+primero, hay que decirlo explícitamente con `depends_on`.
+
+```yaml
+services:
+  backend:
+    build: ./backend
+    depends_on:
+      - db
+  db:
+    image: postgres:16
+```
+
+- Con `depends_on: [db]`, Compose crea y arranca `db` **antes** que `backend`
+  (y lo detiene después, en el orden inverso).
+- Es un orden de **arranque del contenedor**, no de disponibilidad del
+  servicio: `db` puede seguir inicializando cuando `backend` ya está
+  corriendo, así que a veces falla al conectar en los primeros segundos.
+
+> Esta limitación es la que resuelve el `healthcheck` que veremos más
+> adelante: esperar a que el servicio esté **listo**, no solo **arrancado**.
+
+---
 
 # `docker run` vs `docker compose`
 

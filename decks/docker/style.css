@@ -167,6 +167,19 @@
 .arr { color: var(--docker-blue); font-size: 1.5rem; line-height: 1; }
 .flow-note { color: #5b6b76; }
 
+/* Network boundary box (Compose custom networks) */
+.netgrp {
+  border: 2px dashed var(--docker-blueD);
+  border-radius: 14px;
+  padding: 1rem 1.2rem .7rem;
+  background: rgba(36,150,237,.05);
+}
+.netgrp-title {
+  text-align: center; font-weight: 700; font-size: .78rem;
+  letter-spacing: .05em; text-transform: uppercase;
+  color: var(--docker-blueD); margin-bottom: .6rem;
+}
+
 /* Activity call-to-action */
 .repo-cta { margin-top: 2rem; }
 .repo-btn {
